@@ -2,8 +2,8 @@ import "./globals.css";
 import "../styles/aos.css";
 
 export const metadata = {
-  title: "IMS Markets || Home",
-  description: "IMS - Innovative, Market and Scheme.",
+  title: "Test",
+  description: "",
 };
 
 export default function RootLayout({ children }) {
