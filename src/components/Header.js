@@ -57,8 +57,8 @@ const page = ({ f_name, activePage }) => {
         )}
         <div className="flex absolute bg-white z-10">
           <ul
-            className="z-10 fixed -top-120 -right-2 p-3 w-[15vw] h-full bg-slate-50 md:block sm:hidden shadow-2xl list-none
-            flex flex-col justify-start items-end rounded-md blue-glassmorphism text-slate-700 animate-slide-in"
+            className="z-10 fixed -top-120 -right-2 p-3 w-[15vw] h-full bg-slate-50 hidden shadow-2xl list-none
+            md:flex flex-col justify-start items-end rounded-md blue-glassmorphism text-slate-700 animate-slide-in"
           >
             <br />
             {["Dashboard", "Add Contact"].map((item, index) => (
