@@ -9,7 +9,15 @@ import Header from "../components/Header";
 import axios from "axios";
 import { Button, Card, Col, Grid, Loading, Row, Text } from "@nextui-org/react";
 import { NextUIProvider, Table, styled, Modal } from "@nextui-org/react";
+import GoogleMapReact from "google-map-react";
 
+const defaultProps = {
+  center: {
+    lat: 10.99835602,
+    lng: 77.01502627,
+  },
+  zoom: 11,
+};
 const App = () => {
   return (
     <NextUIProvider>
@@ -57,6 +65,20 @@ const App = () => {
                 </Table.Row>
               </Table.Body>
             </Table>
+          </div>
+          <h3 className="ml-3 m-2">Map View</h3>
+          <div className="w-full h-[300px]">
+            <GoogleMapReact
+              bootstrapURLKeys={{ key: "" }}
+              defaultCenter={defaultProps.center}
+              defaultZoom={defaultProps.zoom}
+            >
+              {/* <LocationPin
+              lat={location.lat}
+              lng={location.lng}
+              text={location.address}
+            /> */}
+            </GoogleMapReact>
           </div>
         </main>
       </div>
