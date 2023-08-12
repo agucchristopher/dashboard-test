@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* :root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+} */
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+} */
+.formInput {
+  transition: border-color 0.5s;
+}
+.service {
+  display: inline-grid;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+/* body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+} */
+@font-face {
+  font-family: Poppins;
+  src: url("/Ubuntu-Medium.ttf");
+}
+* {
+  font-family: Poppins;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-main {
+  position: fixed;
+  background: white;
+  width: 80%;
+  height: 65%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 15px;
+  padding: 15px;
+}
+.modal-image {
+  position: fixed;
+  width: 70%;
+  height: 50%;
+  top: 100px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 15px;
+  padding: 15px;
+}
+.modal-text {
+  position: fixed;
+  width: 85%;
+  height: 65%;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 15px;
+  padding: 15px;
+}
+
+.display-block {
+  display: block;
+}
+
+.display-none {
+  display: none;
+}

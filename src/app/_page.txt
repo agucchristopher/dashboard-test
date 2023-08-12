@@ -1,0 +1,470 @@
+"use client";
+import Aos from "aos";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import Header1 from "../components/Header1";
+import axios from "axios";
+import { countries } from "@/country";
+import Footer from "@/components/Footer";
+import InvestCard from "@/components/InvestCard";
+import { Poppins } from "next/font/google";
+import { plansValue } from "@/data/data";
+import { Crisp } from "crisp-sdk-web";
+import { Button, Card, Col, Grid, Loading, Row, Text } from "@nextui-org/react";
+import { NextUIProvider, Table, styled, Modal } from "@nextui-org/react";
+
+const inter = Poppins({ weight: "400", subsets: ["latin"] });
+export default function Home() {
+  let Router = useRouter();
+  const [initialized, setinitialized] = useState(false);
+  let loggedIn = useState(false);
+  useEffect(() => {
+    setloading(false);
+    if (loggedIn) {
+      global.window.user ? (window.location.href = "/home") : null;
+    }
+  }, []);
+  const [f_name, setf_name] = useState("");
+  const [l_name, setl_name] = useState("");
+  const [ticked, setticked] = useState(false);
+  const [country, setcountry] = useState("America");
+  const [phone, setphone] = useState("");
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const [gender, setgender] = useState("male");
+  const [refId, setrefID] = useState("");
+  const [empty, setempty] = useState(true);
+  const [loading, setloading] = useState(false);
+  useEffect(() => {
+    // let url = "/verify-email";
+    // let query = `?phone=${phone}`;
+    // window.location.href = url + query;
+    Crisp.configure("6442d7bf-6c35-4ac3-bb9c-0950c0cc3b38");
+    if (password !== "") {
+      // setempty(false);
+      console.log("empty");
+    }
+    let user = window.localStorage?.getItem("user");
+    window.title = "home";
+    console.log(user);
+    if (user !== null) {
+      window.location.href = "/home";
+    }
+  }, []);
+
+  const Signup = async (e) => {
+    try {
+      e.preventDefault();
+      if (!ticked) {
+        toast.error(
+          "You have to accept terms and conditions, before you continue!"
+        );
+        return;
+      }
+      setloading(true);
+
+      let headersList = {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+      };
+
+      let bodyContent = JSON.stringify({
+        email,
+        password,
+        country,
+        gender,
+        f_name,
+        l_name,
+        phone,
+      });
+
+      let response = await axios.post(
+        // "https://localhost:8080/api/v1/users/signup",
+        "https://happy-robe-cow.cyclic.app/api/v1/users/signup",
+        bodyContent,
+        {
+          headers: headersList,
+          // mode: "no-cors",
+        }
+      );
+
+      let data = response.data;
+      setloading(false);
+      if (data.status !== "err") {
+        toast.success(data.msg);
+        console.log(data);
+        // let url = "/verify-email";
+        // let query = `?id=${data.newUser._id}&&redirect=1`;
+        global.window ? (window.location.href = "/login") : null;
+        // Router.push({ href: 'verify-email', query: { phone }})
+      }
+      if (data.status === "err") {
+        toast.error(data.msg);
+      }
+    } catch (error) {
+      setloading(false);
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    Aos.init({ duration: "1500" });
+    setTimeout(() => {
+      setinitialized(true);
+    }, 3000);
+  }, []);
+  if (!initialized) {
+    return (
+      <NextUIProvider>
+        <Loading
+          type="points"
+          css={{
+            alignContent: "center",
+            display: "flex",
+            justifyContent: "center",
+            h: "100vh",
+          }}
+          color={"error"}
+          size="lg"
+          // color={{}}
+        />
+      </NextUIProvider>
+    );
+  }
+  return (
+    <main className={`bg-[#fff] text-[black] mb-0 m-0  flex-1`}>
+      <Toaster
+      // toastOptions={{ success: { style: { background: "lightgreen" } } }}
+      />
+
+      <Header1 />
+      <section className="">
+        <h1 className="font-bold text-xl m-4 ml-10">
+          START INVESTING IN STOCKS, AFFILIATE MARKETING, CRYPTO CURRENCY,
+          DIGITAL MARKETING AND E-COMMERCE
+        </h1>
+        <p
+          className="m-4 ml-10 text-lg font-sans font-normal"
+          style={{ fontSize: 15 }}
+        >
+          EXPAND YOUR PORTFOLIO <br /> WITH OVER <b>1000+ CHOICES</b>
+        </p>
+        <Image
+          src={"/cfd_stocks.png"}
+          width={400}
+          data-aos="fade-right"
+          className="ml-auto m-2 flex justify-end"
+          height={60}
+          // onClick={() => toast("gejj")}
+        />
+
+        <h1 className="font-semibold text-lg mt-4 ml-8 mb-1">
+          OPEN AN ACCOUNT IN LESS <br /> THAN 3 MINUTES
+        </h1>
+        <form
+          onSubmit={
+            loading
+              ? Signup
+              : (e) => {
+                  e.preventDefault();
+                }
+          }
+          // data-aos="fade-up"
+          className="flex flex-col items-center justify-center px-3  lg:py-0"
+        >
+          <input
+            className="formInput focus:border-[dodgerblue] m-1 h-[45px]  p-2 outline-none  bg-[transparent] border-gray-500 border-[1.5px] rounded-[5px] w-[90%]"
+            placeholder="First Name"
+            onChange={(e) => setf_name(e.target.value)}
+            required
+          />
+          <br />
+          <input
+            className="formInput focus:border-[dodgerblue] m-1 h-[45] p-2 outline-none  bg-[transparent] border-gray-500 border-[1.5px] rounded-[5px] w-[90%]"
+            placeholder="Last Name"
+            onChange={(e) => setl_name(e.target.value)}
+            required
+          />
+          <br />
+          {/* <input
+            className="formInput focus:border-[dodgerblue] m-1 h-[45] p-2 outline-none  bg-[transparent] border-gray-500 border-[1.5px] rounded-[5px] w-[90%]"
+            placeholder="Country of Residence"
+          /> */}
+          <select
+            className="formInput focus:border-[dodgerblue] m-1 h-[45] p-2 outline-none  bg-[transparent] border-gray-500 border-[1.5px] rounded-[5px] text-black w-[90%]"
+            placeholder="Country of Residence"
+            onChange={(e) => setcountry(e.target.value)}
+            required
+          >
+            <option disabled className="text-[black]">
+              Country
+            </option>
+            {countries.map((item, index) => {
+              // console.log(item);
+              return (
+                <option
+                  className="text-black inline-flex"
+                  key={index}
+                  value={item.name}
+                >
+                  {item.name}
+                </option>
+              );
+            })}
+          </select>
+          <br />
+          <select
+            className="formInput focus:border-[dodgerblue] m-1 h-[45] p-2 outline-none  bg-[transparent] border-gray-500 border-[1.5px] rounded-[5px] w-[90%]"
+            placeholder="Gender"
+            onChange={(e) => setgender(e.target.value)}
+            required
+          >
+            <option disabled>Gender</option>
+            <option className="text-black" value={"male"}>
+              Male
+            </option>
+            <option className="text-black" value={"female"}>
+              Female
+            </option>
+          </select>
+          <br />
+          <input
+            className="formInput focus:border-[dodgerblue] m-1 h-[45] p-2 outline-none  bg-[transparent] border-gray-500 border-[1.5px] rounded-[5px] w-[90%]"
+            placeholder="Email"
+            type="email"
+            onChange={(e) => setemail(e.target.value)}
+            required
+          />
+          {/* <br />
+          <input
+            className="formInput focus:border-[dodgerblue] m-1 h-[45] p-2 outline-none  bg-[transparent] border-gray-500 border-[1.5px] rounded-[5px] w-[90%]"
+            placeholder="Referall Code (optional)"
+            onChange={(e) => setrefID(e.target.value)}
+            required
+          /> */}
+          <br />
+          <input
+            className="formInput focus:border-[dodgerblue] m-1 h-[45] p-2 outline-none  bg-[transparent] border-gray-500 border-[1.5px] rounded-[5px] w-[90%]"
+            placeholder="Phone Number"
+            type="tel"
+            onChange={(e) => setphone(e.target.value)}
+            required
+          />
+          <br />
+          <select
+            className="formInput focus:border-[dodgerblue] mt-2 h-[45] p-2 outline-none  bg-[transparent] border-gray-500 border-[1.5px] rounded-[5px] text-black w-[90%]"
+            // onChange={(e) => {
+            //   setplan(e.target.value);
+
+            //   plans.map((p) => {
+            //     if (e.target.value == p.name) {
+            //       let pcent = p.percentage;
+            //       let profitamount = (p.percentage * amount) / 1;
+            //       console.log(profitamount);
+            //       setprofit(profitamount);
+            //     }
+            //   });
+            // }}
+            required
+          >
+            <option disabled className="text-[black]">
+              Packages
+            </option>
+            {[
+              {
+                name: "Cryptocurrency",
+                percentage: 0.155,
+              },
+              {
+                name: "Digital Marketing",
+                percentage: 0.15,
+              },
+              {
+                name: "E-Commerce",
+                percentage: 0.155,
+              },
+              {
+                name: "Stocks",
+                percentage: 0.36,
+              },
+              {
+                name: "Affiliate Marketing",
+                percentage: 0.154,
+              },
+            ].map((item, index) => {
+              // console.log(item);
+              return (
+                <option
+                  className="text-black inline-flex"
+                  key={index}
+                  value={item}
+                >
+                  {item.name}
+                </option>
+              );
+            })}
+          </select>
+          <br />
+          <input
+            className="formInput focus:border-[dodgerblue] m-1 h-[45] p-2 outline-none  bg-[transparent] border-gray-500 border-[1.5px] rounded-[5px] w-[90%]"
+            placeholder="Password"
+            type="password"
+            onChange={(e) => setpassword(e.target.value)}
+            required
+          />
+          <p className="align-start text-center justify-items-start m-2">
+            {" "}
+            <input
+              type="checkbox"
+              required
+              onChange={(e) => setticked(!ticked)}
+            />{" "}
+            I've read and accepted the{" "}
+            <a className="text-red-700" href="./privacy-policy">
+              privacy policy
+            </a>
+            .{" "}
+          </p>
+          <button
+            type="submit"
+            onClick={loading ? null : Signup}
+            className={`h-[40px] text-[#fff] w-[90%] rounded-[5px]   ${
+              loading ? "bg-red-500 opacity-70" : "bg-red-600"
+            }`}
+          >
+            {loading ? "Loading.." : "Register Now"}{" "}
+          </button>
+          <p className="text-center inline-flex m-[2px] font-medium">
+            Already have an account?{" "}
+            <a href="./login" className="text-red-600 cursor-pointer ml-[1px]">
+              {" "}
+              Login
+            </a>
+          </p>
+        </form>
+      </section>
+      {/* Investment Plans */}
+      <div className="mt-3 m-4">
+        <h3 className={`${"ml-4"} ${inter.className}`}>Investment Plans</h3>
+        <Grid.Container gap={2}>
+          {plansValue.map((val) => {
+            return (
+              <Grid sm={12} md={3}>
+                <InvestCard
+                  data-aos="fade-left"
+                  percentage={Math.floor((val.percentage * 100) / 1)}
+                  name={val.name}
+                  wDate={val.wDate}
+                  minimum={val.minimum}
+                />
+              </Grid>
+            );
+          })}
+        </Grid.Container>
+      </div>
+      {/* Section 3 */}
+      <section className="bg-[#f8f8f8] gap-5 md:flex  flex mt-[25px] flex-col items-center justify-center">
+        <h2 className="text-center flex font-semibold m-2 text-[18px]">
+          WHY INVEST WITH <br /> IMS MARKETS?
+        </h2>
+        <br />
+        <div className="md:flex-row md:gap-5 md:mb-5 flex-col flex ">
+          <div className="hover:animate-bounce" data-aos="fade-left">
+            <Image
+              className="m-[10px]"
+              src={"/fast.svg"}
+              height={80}
+              width={120}
+            />
+            <h2 className="text-center text-[18px] font-semibold">
+              EXECPTIONAL <br /> EXECUTION SPEED
+            </h2>
+          </div>
+
+          <div className="hover:animate-bounce" data-aos="fade-right">
+            <Image
+              className="m-[10px]"
+              src={"/leverage.svg"}
+              height={80}
+              width={120}
+            />
+            <h2 className="text-center text-[18px] font-semibold">
+              FLEXIBLE LEVERAGE <br /> TIME
+            </h2>
+          </div>
+          <br />
+
+          <div className="hover:animate-bounce" data-aos="fade-left">
+            <Image
+              className="m-[10px]"
+              src={"/low.svg"}
+              height={82}
+              width={120}
+            />
+            <h2 className="text-center text-[18px] font-semibold">
+              ULTRA-LOW <br /> COMMISSION
+            </h2>
+          </div>
+          <br />
+        </div>
+      </section>
+      {/* Section 4 */}
+      <section className="bg-[#f6f6f6] flex mt-[1.3px] flex-col items-center justify-center">
+        <h2 className="text-center font-semibold m-2 text-[18px]">
+          TRUST IS IN THE NUMBERS
+        </h2>
+        <br />
+        <div
+          className="inline items-center justify-center"
+          data-aos="fade-left"
+        >
+          <img
+            className="m-[10px] "
+            src={"/accounts.svg"}
+            // height={70}
+            // width={70}
+          />
+          <h2 className="text-center text-[18px] font-semibold">
+            3500000 <br /> LIVE ACCOUNTS
+          </h2>
+        </div>
+
+        <div
+          className="inline items-center justify-center"
+          data-aos="fade-right"
+        >
+          <img
+            className="m-[10px]"
+            src={"/awards.svg"}
+            // height={80}
+            // width={120}
+          />
+          <h2 className="text-center text-[18px] font-semibold">
+            60 <br /> INDUSTRY AWARDS
+          </h2>
+        </div>
+        <br />
+        <div
+          className="inline items-center justify-center"
+          data-aos="fade-right"
+        >
+          <img
+            className="m-[10px]"
+            src={"/insurance.svg"}
+            height={80}
+            width={120}
+          />
+          <h2 className="text-center text-[18px] font-semibold">
+            UP TO $5,000,000
+            <br /> MARKET-LEADING INSURANCE
+          </h2>
+        </div>
+
+        <br />
+      </section>
+      <Footer />
+    </main>
+  );
+}
